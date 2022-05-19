@@ -12,6 +12,7 @@ object juego{
 		game.addVisual(cactus)
 		game.addVisual(dino)
 		game.addVisual(reloj)
+		game.addVisual(meteorito)
 	
 		keyboard.space().onPressDo{ self.jugar()}
 		
@@ -23,6 +24,7 @@ object juego{
 		dino.iniciar()
 		reloj.iniciar()
 		cactus.iniciar()
+		meteorito.iniciar()
 	}
 	
 	method jugar(){
@@ -39,6 +41,7 @@ object juego{
 		game.addVisual(gameOver)
 		cactus.detener()
 		reloj.detener()
+		meteorito.detener()
 		dino.morir()
 	}
 	
@@ -56,7 +59,7 @@ object reloj {
 	var tiempo = 0
 	
 	method text() = tiempo.toString()
-	method position() = game.at(1, game.height()-1)
+	method position() = game.at(5, game.height()-3)
 	
 	method pasarTiempo() {
 		tiempo = tiempo +1
@@ -94,6 +97,33 @@ object cactus {
 	}
     method detener(){
 		game.removeTickEvent("moverCactus")
+	}
+}
+
+object meteorito {
+	 
+	const posicionInicial = game.at(20,suelo.position().y())
+	var position = posicionInicial
+
+	method image() = "meteorito.png"
+	method position() = position
+	
+	method iniciar(){
+		position = posicionInicial
+		game.onTick(velocidad,"moverMeteorito",{self.mover()})
+	}
+	
+	method mover(){
+		position = position.left(1)
+		if (position.x() == -1)
+			position = posicionInicial
+	}
+	
+	method chocar(){
+		juego.terminar()
+	}
+    method detener(){
+		game.removeTickEvent("moverMeteorito")
 	}
 }
 
